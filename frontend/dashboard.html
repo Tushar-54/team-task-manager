@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dashboard</title>
+
+  <style>
+    body {
+      font-family: Arial;
+      background: #f4f6f8;
+      padding: 20px;
+    }
+
+    h2 {
+      text-align: center;
+    }
+
+    .card {
+      background: white;
+      padding: 15px;
+      margin: 10px 0;
+      border-radius: 8px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    }
+
+    input {
+      padding: 8px;
+      margin: 5px;
+    }
+
+    button {
+      padding: 8px 12px;
+      background: #667eea;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    li {
+      background: white;
+      margin: 5px 0;
+      padding: 10px;
+      border-radius: 5px;
+    }
+  </style>
+
+</head>
+
+<body>
+
+<h2>Team Task Manager</h2>
+
+<div class="card">
+  <h3>Create Project</h3>
+  <input id="p_title" placeholder="Title">
+  <input id="p_desc" placeholder="Description">
+  <button onclick="createProject()">Create</button>
+</div>
+
+<div class="card">
+  <h3>Create Task</h3>
+  <input id="t_title" placeholder="Task Title">
+  <input id="t_desc" placeholder="Description">
+  <input id="assigned" placeholder="Assign User ID">
+  <input id="project" placeholder="Project ID">
+  <input id="due" type="date">
+  <button onclick="createTask()">Create Task</button>
+</div>
+
+<div class="card">
+  <h3>Tasks</h3>
+  <button onclick="loadTasks()">Load Tasks</button>
+  <ul id="taskList"></ul>
+</div>
+
+<script src="script.js"></script>
+
+<script>
+const API = "http://localhost:5000/api";
+const user = JSON.parse(localStorage.getItem("user"));
+
+// CREATE PROJECT
+function createProject(){
+  fetch(API+"/projects/create",{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body: JSON.stringify({
+      title: p_title.value,
+      description: p_desc.value,
+      created_by: user.id,
+      role: user.role
+    })
+  })
+  .then(res=>res.text())
+  .then(data=>alert(data));
+}
+
+// CREATE TASK
+function createTask(){
+  fetch(API+"/tasks/create",{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body: JSON.stringify({
+      title: t_title.value,
+      description: t_desc.value,
+      assigned_to: assigned.value,
+      project_id: project.value,
+      due_date: due.value
+    })
+  })
+  .then(res=>res.text())
+  .then(data=>alert(data));
+}
+
+// LOAD TASKS
+function loadTasks(){
+  fetch(API+"/tasks/1")
+  .then(res=>res.json())
+  .then(data=>{
+    taskList.innerHTML="";
+    data.forEach(t=>{
+      let li = document.createElement("li");
+      li.innerHTML = `
+        ${t.title} - ${t.status}
+        <button onclick="updateTask(${t.id})">Done</button>
+      `;
+      taskList.appendChild(li);
+    });
+  });
+}
+
+// UPDATE TASK
+function updateTask(id){
+  fetch(API+"/tasks/update/"+id,{
+    method:"PUT",
+    headers:{"Content-Type":"application/json"},
+    body: JSON.stringify({status:"done"})
+  })
+  .then(()=> loadTasks());
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Login</title>
+  <style>
+    body {
+      font-family: Arial;
+      background: linear-gradient(to right, #667eea, #764ba2);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      width: 300px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    }
+
+    input, select {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      background: #667eea;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    h2, h3 {
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+  <h2>Login</h2>
+
+  <input id="email" placeholder="Email">
+  <input id="password" placeholder="Password">
+  <button onclick="login()">Login</button>
+
+  <h3>Register</h3>
+
+  <input id="name" placeholder="Name">
+  <input id="r_email" placeholder="Email">
+  <input id="r_password" placeholder="Password">
+
+  <select id="role">
+    <option value="admin">Admin</option>
+    <option value="member">Member</option>
+  </select>
+
+  <button onclick="register()">Register</button>
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
